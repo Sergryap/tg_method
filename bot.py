@@ -4,6 +4,7 @@ from response_obj import Message
 
 
 class Bot:
+    """The class of tg bot methods"""
 
     def __init__(self, tg_token: str, session: httpx.AsyncClient, loop=None):
         self.token = tg_token
@@ -44,8 +45,7 @@ class Bot:
             'protect_content': protect_content,
             'message_thread_id': message_thread_id,
             'allow_sending_without_reply': allow_sending_without_reply,
-            'reply_markup': None if not reply_markup else reply_markup.json(),
-
+            'reply_markup': None if not reply_markup else reply_markup.json()
         }
         for param, value in params.copy().items():
             if value is None:
@@ -72,6 +72,7 @@ class Bot:
         Whenever there is an update for the bot, we will send an HTTPS POST request to the specified URL,
         containing a JSON-serialized Update.
         In case of an unsuccessful request, we will give up after a reasonable amount of attempts.
+
         Args:
             See here https://core.telegram.org/bots/api#setwebhook
         Returns:
@@ -101,8 +102,7 @@ class Bot:
             drop_pending_updates=None
     ):
         """Use this method to remove webhook integration if you decide to switch back to getUpdates.
-
-        https://core.telegram.org/bots/api#deletewebhook
+        See here: https://core.telegram.org/bots/api#deletewebhook
 
         Args:
             drop_pending_updates (bool): Pass True to drop all pending updates
