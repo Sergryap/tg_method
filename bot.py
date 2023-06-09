@@ -92,7 +92,7 @@ class Bot:
                 del params[param]
         response = await self.session.post(request_url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
-        return response
+        return response.json()
 
     async def delete_webhook(
             self,
@@ -113,7 +113,7 @@ class Bot:
             params = {'drop_pending_updates': drop_pending_updates}
         response = await self.session.post(request_url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
-        return response
+        return response.json()
 
     async def send_photo(
             self,
@@ -214,6 +214,39 @@ class Bot:
         if res.get('from'):
             res['from_'] = res.pop('from')
         return tg_obj.Message.parse_obj(res)
+
+    async def answer_callback_query(
+            self,
+            callback_query_id,
+            text=None,
+            show_alert=None,
+            url=None,
+            cache_time=None
+    ):
+        """Use this method to send answers to callback queries sent from inline keyboards.
+        The answer will be displayed to the user as a notification at the top of the chat
+        screen or as an alert. On success, True is returned.
+
+        Args:
+            See here: https://core.telegram.org/bots/api#answercallbackquery
+        Returns:
+            On success, True is returned
+        """
+
+        request_url = f"https://api.telegram.org/bot{self.token}/answercallbackquery"
+        params = {
+            'callback_query_id': callback_query_id,
+            'text': text,
+            'show_alert': show_alert,
+            'url': url,
+            'cache_time': cache_time
+        }
+        for param, value in params.copy().items():
+            if value is None:
+                del params[param]
+        response = await self.session.get(request_url, params=params, follow_redirects=True)
+        await self.__tg_raise_for_status(response)
+        return response.json()
 
     async def send_location(self):
         pass
