@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import httpx
 
-from pydantic import BaseModel, root_validator
+from pydantic import BaseModel as GeneralBaseModel, root_validator
 from typing import Dict, List, Any, Union
 
 
-class GeneralBaseModel(BaseModel):
+class BaseModel(GeneralBaseModel):
     """Class for @root_validator"""
 
     @root_validator()
@@ -17,7 +17,7 @@ class GeneralBaseModel(BaseModel):
         return values
 
 
-class User(GeneralBaseModel):
+class User(BaseModel):
     """This model represents a Telegram user or bot
 
     See here: https://core.telegram.org/bots/api#user
@@ -36,7 +36,7 @@ class User(GeneralBaseModel):
     supports_inline_queries: bool = None
 
 
-class Chat(GeneralBaseModel):
+class Chat(BaseModel):
     """This model represents a chat
 
     See here: https://core.telegram.org/bots/api#chat
@@ -71,7 +71,7 @@ class Chat(GeneralBaseModel):
     linked_chat_id: int = None
 
 
-class KeyboardButton(GeneralBaseModel):
+class KeyboardButton(BaseModel):
     """This model represents one button of the reply keyboard.
     For simple text buttons, String can be used instead of this object to specify the button text.
     The optional fields web_app, request_user, request_chat, request_contact,
@@ -89,7 +89,7 @@ class KeyboardButton(GeneralBaseModel):
     web_app: Any = None
 
 
-class ReplyKeyboardMarkup(GeneralBaseModel):
+class ReplyKeyboardMarkup(BaseModel):
     """This model represents a custom keyboard with reply options
 
     See here: https://core.telegram.org/bots/api#replykeyboardmarkup
@@ -103,7 +103,7 @@ class ReplyKeyboardMarkup(GeneralBaseModel):
     selective: bool = None
 
 
-class ReplyKeyboardRemove(GeneralBaseModel):
+class ReplyKeyboardRemove(BaseModel):
     """Upon receiving a message with this object, Telegram clients will remove the current
     custom keyboard and display the default letter-keyboard. By default, custom keyboards
     are displayed until a new keyboard is sent by a bot. An exception is made for one-time
@@ -115,7 +115,7 @@ class ReplyKeyboardRemove(GeneralBaseModel):
     selective: bool = None
 
 
-class ForceReply(GeneralBaseModel):
+class ForceReply(BaseModel):
     """Upon receiving a message with this object, Telegram clients will display a reply
     interface to the user (act as if the user has selected the bot's message and tapped 'Reply').
     This can be extremely useful if you want to create user-friendly step-by-step interfaces
@@ -128,7 +128,7 @@ class ForceReply(GeneralBaseModel):
     selective: bool = None
 
 
-class InlineKeyboardButton(GeneralBaseModel):
+class InlineKeyboardButton(BaseModel):
     """This model represents one button of an inline keyboard.
 
     See here: https://core.telegram.org/bots/api#inlinekeyboardbutton
@@ -155,7 +155,7 @@ class InlineKeyboardMarkup(BaseModel):
     inline_keyboard: List[List[InlineKeyboardButton]]
 
 
-class Invoice(GeneralBaseModel):
+class Invoice(BaseModel):
     """This model contains basic information about an invoice
 
     See here: https://core.telegram.org/bots/api#invoice
@@ -168,7 +168,7 @@ class Invoice(GeneralBaseModel):
     total_amount: int
 
 
-class SuccessfulPayment(GeneralBaseModel):
+class SuccessfulPayment(BaseModel):
     """This object contains basic information about a successful payment.
 
     See here: https://core.telegram.org/bots/api#successfulpayment
@@ -183,7 +183,7 @@ class SuccessfulPayment(GeneralBaseModel):
     provider_payment_charge_id: str = None
 
 
-class OrderInfo(GeneralBaseModel):
+class OrderInfo(BaseModel):
     """This object represents information about an order.
 
     See here: https://core.telegram.org/bots/api#orderinfo
@@ -195,7 +195,7 @@ class OrderInfo(GeneralBaseModel):
     shipping_address: ShippingAddress = None
 
 
-class ShippingAddress(GeneralBaseModel):
+class ShippingAddress(BaseModel):
     """This object represents a shipping address.
 
     See here: https://core.telegram.org/bots/api#shippingaddress
@@ -209,7 +209,7 @@ class ShippingAddress(GeneralBaseModel):
     post_code: str
 
 
-class Message(GeneralBaseModel):
+class Message(BaseModel):
     """This model represents a message.
 
     See here: https://core.telegram.org/bots/api#message
@@ -288,7 +288,7 @@ class Message(GeneralBaseModel):
     reply_markup: InlineKeyboardMarkup = None
 
 
-class MessageEntity(GeneralBaseModel):
+class MessageEntity(BaseModel):
     """This model represents one special entity in a text message.
     For example, hashtags, usernames, URLs, etc.
 
