@@ -304,6 +304,10 @@ class MessageEntity(BaseModel):
     custom_emoji_id: str = None
 
 
+class MessageReplyMarkup(BaseModel):
+    message_reply_markup: Union[Message, bool]
+
+
 class TgHTTPStatusError(httpx._exceptions.HTTPStatusError):
     pass
 

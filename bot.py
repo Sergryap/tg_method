@@ -248,6 +248,39 @@ class Bot:
         await self.__tg_raise_for_status(response)
         return response.json()
 
+    async def edit_message_reply_markup(
+            self,
+            chat_id=None,
+            message_id=None,
+            inline_message_id=None,
+            reply_markup=None
+    ):
+        """Use this method to edit only the reply markup of messages.
+
+        Args:
+            See here: https://core.telegram.org/bots/api#editmessagereplymarkup
+        Return:
+            On success, if the edited message is not an inline message,
+            the edited Message is returned, otherwise True is returned.
+        """
+
+        url = f"https://api.telegram.org/bot{self.token}/editMessageReplyMarkup"
+        params = {
+            'chat_id': chat_id,
+            'message_id': message_id,
+            'inline_message_id': inline_message_id,
+            'reply_markup': reply_markup
+        }
+        for param, value in params.copy().items():
+            if value is None:
+                del params[param]
+        response = await self.session.get(url, params=params, follow_redirects=True)
+        await self.__tg_raise_for_status(response)
+        res = response.json().get('result')
+        if res.get('from'):
+            res['from_'] = res.pop('from')
+        return tg_obj.MessageReplyMarkup.parse_obj(res)
+
     async def send_location(self):
         pass
 
