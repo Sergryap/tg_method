@@ -52,7 +52,7 @@ class Bot:
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
         if res.get('from'):
-            res['from_'] = res.pop('from', None)
+            res['from_'] = res.pop('from')
         return tg_obj.Message.parse_obj(res)
 
     async def set_webhook(
@@ -160,7 +160,59 @@ class Bot:
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
         if res.get('from'):
-            res['from_'] = res.pop('from', None)
+            res['from_'] = res.pop('from')
+        return tg_obj.Message.parse_obj(res)
+
+    async def send_document(
+            self,
+            chat_id,
+            document,
+            message_thread_id=None,
+            thumbnail=None,
+            caption=None,
+            parse_mode=None,
+            caption_entities=None,
+            disable_content_type_detection=None,
+            disable_notification=None,
+            protect_content=None,
+            reply_to_message_id=None,
+            allow_sending_without_reply=None,
+            reply_markup=None
+    ):
+        """Use this method to send general files.
+        On success, the sent Message is returned. Bots can currently send files
+        of any type of up to 50 MB in size, this limit may be changed in the future.
+
+        Args:
+            See here: https://core.telegram.org/bots/api#senddocument
+        Returns:
+            On success, the sent message is returned as a Message instance
+        """
+
+        url = f"https://api.telegram.org/bot{self.token}/sendDocument"
+        params = {
+            'chat_id': chat_id,
+            'message_thread_id': message_thread_id,
+            'document': document,
+            'thumbnail': thumbnail,
+            'caption': caption,
+            'parse_mode': parse_mode,
+            'caption_entities': caption_entities,
+            'disable_content_type_detection': disable_content_type_detection,
+            'disable_notification': disable_notification,
+            'protect_content': protect_content,
+            'reply_to_message_id': reply_to_message_id,
+            'allow_sending_without_reply': allow_sending_without_reply,
+            'reply_markup': None if not reply_markup else reply_markup.json()
+        }
+        for param, value in params.copy().items():
+            if value is None:
+                del params[param]
+        response = await self.session.get(url, params=params, follow_redirects=True)
+        await self.__tg_raise_for_status(response)
+        res = response.json().get('result')
+        if res.get('from'):
+            res['from_'] = res.pop('from')
         return tg_obj.Message.parse_obj(res)
 
     async def send_location(self):
