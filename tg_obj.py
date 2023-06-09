@@ -81,12 +81,12 @@ class KeyboardButton(BaseModel):
     """
 
     text: str
-    request_user: Dict[str, Any] = None
-    request_chat: Dict[str, Any] = None
+    request_user: Dict[str, Union[int, bool]] = None
+    request_chat: Dict[str, Union[int, bool, Dict[str, bool]]] = None
     request_contact: bool = None
     request_location: bool = None
-    request_poll: Dict[str, Any] = None
-    web_app: Any = None
+    request_poll: Dict[str, str] = None
+    web_app: Dict[str, AnyHttpUrl] = None
 
 
 class ReplyKeyboardMarkup(BaseModel):
