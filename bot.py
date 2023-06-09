@@ -1,6 +1,5 @@
 import httpx
-
-from response_obj import Message
+import tg_obj
 
 
 class Bot:
@@ -30,8 +29,7 @@ class Bot:
         Args:
             See here https://core.telegram.org/bots/api#sendmessage
         Returns:
-            On success, the sent Message is returned
-
+            On success, the sent message is returned as a Message instance
         """
 
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
@@ -51,11 +49,11 @@ class Bot:
             if value is None:
                 del params[param]
         response = await self.session.get(url, params=params, follow_redirects=True)
-        response.raise_for_status()
+        await self.__tg_raise_for_status(response)
         res = response.json().get('result')
         if res.get('from'):
             res['from_'] = res.pop('from', None)
-        return Message.parse_obj(res)
+        return tg_obj.Message.parse_obj(res)
 
     async def set_webhook(
             self,
@@ -77,7 +75,6 @@ class Bot:
             See here https://core.telegram.org/bots/api#setwebhook
         Returns:
             True on success
-
         """
 
         request_url = f"https://api.telegram.org/bot{self.token}/setWebhook"
@@ -94,7 +91,7 @@ class Bot:
             if value is None:
                 del params[param]
         response = await self.session.post(request_url, params=params, follow_redirects=True)
-        response.raise_for_status()
+        await self.__tg_raise_for_status(response)
         return response
 
     async def delete_webhook(
@@ -108,7 +105,6 @@ class Bot:
             drop_pending_updates (bool): Pass True to drop all pending updates
         Returns:
             True on success.
-
         """
 
         request_url = f"https://api.telegram.org/bot{self.token}/deleteWebhook"
@@ -116,7 +112,7 @@ class Bot:
         if drop_pending_updates:
             params = {'drop_pending_updates': drop_pending_updates}
         response = await self.session.post(request_url, params=params, follow_redirects=True)
-        response.raise_for_status()
+        await self.__tg_raise_for_status(response)
         return response
 
     async def send_photo(self):
@@ -124,3 +120,39 @@ class Bot:
 
     async def send_location(self):
         pass
+
+    @staticmethod
+    async def __tg_raise_for_status(response: httpx._models.Response):
+
+        request = response._request
+        if request is None:
+            raise tg_obj.TgRuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+
+        if response.is_success:
+            return
+
+        if response.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://httpstatuses.com/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://httpstatuses.com/{0.status_code}"
+            )
+
+        status_class = response.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(response, error_type=error_type)
+        raise tg_obj.TgHTTPStatusError(message, request=request, response=response)

@@ -1,10 +1,10 @@
 import asyncio
 import httpx
+import tg_obj
 
 from environs import Env
 from bot import Bot
 from pprint import pprint
-from response_obj import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 
 
 async def main():
@@ -17,10 +17,10 @@ async def main():
     chat_id = env.str('CHAT_ID')
 
     # Создание клавиатуры для Сообщение_1:
-    button_1 = InlineKeyboardButton(text='button_1', callback_data='test')
-    button_2 = InlineKeyboardButton(text='button_2', callback_data='test')
-    button_3 = InlineKeyboardButton(text='button_3', callback_data='test')
-    keyboard = InlineKeyboardMarkup(
+    button_1 = tg_obj.InlineKeyboardButton(text='button_1', callback_data='test')
+    button_2 = tg_obj.InlineKeyboardButton(text='button_2', callback_data='test')
+    button_3 = tg_obj.InlineKeyboardButton(text='button_3', callback_data='test')
+    keyboard = tg_obj.InlineKeyboardMarkup(
         inline_keyboard=[
             [button_1, button_2, button_3],
             [button_2, button_3, button_1],
@@ -29,10 +29,10 @@ async def main():
     )
 
     # Создание клавиатуры для Сообщение_2:
-    button_4 = KeyboardButton(text='button_4')
-    button_5 = KeyboardButton(text='button_5')
-    button_6 = KeyboardButton(text='button_6')
-    reply_keyboard = ReplyKeyboardMarkup(
+    button_4 = tg_obj.KeyboardButton(text='button_4')
+    button_5 = tg_obj.KeyboardButton(text='button_5')
+    button_6 = tg_obj.KeyboardButton(text='button_6')
+    reply_keyboard = tg_obj.ReplyKeyboardMarkup(
         keyboard=[
             [button_4, button_5, button_6],
             [button_5, button_6, button_4],

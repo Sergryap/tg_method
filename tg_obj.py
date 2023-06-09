@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import httpx
+
 from pydantic import BaseModel, root_validator
 from typing import Dict, List, Any
 
@@ -35,7 +39,7 @@ class User(GeneralBaseModel):
 class Chat(GeneralBaseModel):
     """This model represents a chat
 
-    See here: This object represents a chat
+    See here: https://core.telegram.org/bots/api#chat
     """
 
     id: int
@@ -55,7 +59,7 @@ class Chat(GeneralBaseModel):
     join_by_request: bool = None
     description: str = None
     invite_link: str = None
-    pinned_message: Dict[str, Any] = None
+    pinned_message: Message = None
     permissions: Dict[str, Any] = None
     slow_mode_delay: int = None
     message_auto_delete_time: int = None
@@ -145,7 +149,7 @@ class Message(GeneralBaseModel):
     forward_date: int = None
     is_topic_message: Dict[str, Any] = None
     is_automatic_forward: bool = None
-    reply_to_message: Dict[str, Any] = None
+    reply_to_message: 'Message' = None
     via_bot: User = None
     edit_date: int = None
     has_protected_content: bool = None
@@ -181,7 +185,7 @@ class Message(GeneralBaseModel):
     message_auto_delete_timer_changed: List[Dict[str, Any]] = None
     migrate_to_chat_id: int = None
     migrate_from_chat_id: int = None
-    pinned_message: Dict[str, Any] = None
+    pinned_message: 'Message' = None
     invoice: Dict[str, Any] = None
     successful_payment: Dict[str, Any] = None
     user_shared: Dict[str, Any] = None
@@ -202,3 +206,11 @@ class Message(GeneralBaseModel):
     video_chat_participants_invited: Dict[str, Any] = None
     web_app_data: Dict[str, Any] = None
     reply_markup: InlineKeyboardMarkup = None
+
+
+class TgHTTPStatusError(httpx._exceptions.HTTPStatusError):
+    pass
+
+
+class TgRuntimeError(RuntimeError):
+    pass
