@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import httpx
 
-from pydantic import BaseModel as GeneralBaseModel, root_validator
+from pydantic import BaseModel as GeneralBaseModel, root_validator, AnyHttpUrl
 from typing import Dict, List, Any, Union
 
 
@@ -137,12 +137,12 @@ class InlineKeyboardButton(BaseModel):
     text: str
     url: str = None
     callback_data: str = None
-    web_app: Dict[str, Any] = None
-    login_url: Dict[str, Any] = None
+    web_app: Dict[str, AnyHttpUrl] = None
+    login_url: Dict[str, Union[str, bool]] = None
     switch_inline_query: str = None
     switch_inline_query_current_chat: str = None
-    switch_inline_query_chosen_chat: Dict[str, Any] = None
-    callback_game: Dict[str, Any] = None
+    switch_inline_query_chosen_chat: Dict[str, Union[str, bool]] = None
+    callback_game: Any = None
     pay: bool = None
 
 
