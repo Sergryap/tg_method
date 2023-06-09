@@ -151,7 +151,62 @@ class InlineKeyboardMarkup(BaseModel):
 
     See here: https://core.telegram.org/bots/api#inlinekeyboardmarkup
     """
+
     inline_keyboard: List[List[InlineKeyboardButton]]
+
+
+class Invoice(GeneralBaseModel):
+    """This model contains basic information about an invoice
+
+    See here: https://core.telegram.org/bots/api#invoice
+    """
+
+    title: str
+    description: str
+    start_parameter: str
+    currency: str
+    total_amount: int
+
+
+class SuccessfulPayment(GeneralBaseModel):
+    """This object contains basic information about a successful payment.
+
+    See here: https://core.telegram.org/bots/api#successfulpayment
+    """
+
+    currency: str
+    total_amount: int
+    invoice_payload: str
+    shipping_option_id: str = None
+    order_info: OrderInfo = None
+    telegram_payment_charge_id: str = None
+    provider_payment_charge_id: str = None
+
+
+class OrderInfo(GeneralBaseModel):
+    """This object represents information about an order.
+
+    See here: https://core.telegram.org/bots/api#orderinfo
+    """
+
+    name: str = None
+    phone_number: str = None
+    email: str = None
+    shipping_address: ShippingAddress = None
+
+
+class ShippingAddress(GeneralBaseModel):
+    """This object represents a shipping address.
+
+    See here: https://core.telegram.org/bots/api#shippingaddress
+    """
+
+    country_code: str
+    state: str
+    city: str
+    street_line1: str
+    street_line2: str
+    post_code: str
 
 
 class Message(GeneralBaseModel):
@@ -181,7 +236,7 @@ class Message(GeneralBaseModel):
     media_group_id: str = None
     author_signature: str = None
     text: str = None
-    entities: List[Dict[str, Any]] = None
+    entities: List[MessageEntity] = None
     animation: Dict[str, Any] = None
     audio: Dict[str, Any] = None
     document: Dict[str, Any] = None
@@ -191,7 +246,7 @@ class Message(GeneralBaseModel):
     video_note: Dict[str, Any] = None
     voice: Dict[str, Any] = None
     caption: str = None
-    caption_entities: List[Dict[str, Any]] = None
+    caption_entities: List[MessageEntity] = None
     has_media_spoiler: bool = None
     contact: Dict[str, Any] = None
     dice: Dict[str, Any] = None
@@ -211,8 +266,8 @@ class Message(GeneralBaseModel):
     migrate_to_chat_id: int = None
     migrate_from_chat_id: int = None
     pinned_message: 'Message' = None
-    invoice: Dict[str, Any] = None
-    successful_payment: Dict[str, Any] = None
+    invoice: Invoice = None
+    successful_payment: SuccessfulPayment = None
     user_shared: Dict[str, Any] = None
     chat_shared: Dict[str, Any] = None
     connected_website: str = None
