@@ -3,7 +3,7 @@ from __future__ import annotations
 import httpx
 
 from pydantic import BaseModel, root_validator
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Union
 
 
 class GeneralBaseModel(BaseModel):
@@ -103,6 +103,31 @@ class ReplyKeyboardMarkup(GeneralBaseModel):
     selective: bool = None
 
 
+class ReplyKeyboardRemove(GeneralBaseModel):
+    """Upon receiving a message with this object, Telegram clients will remove the current
+    custom keyboard and display the default letter-keyboard. By default, custom keyboards
+    are displayed until a new keyboard is sent by a bot. An exception is made for one-time
+    keyboards that are hidden immediately after the user presses a button
+
+    See here: https://core.telegram.org/bots/api#replykeyboardremove
+    """
+    remove_keyboard: bool
+    selective: bool = None
+
+
+class ForceReply(GeneralBaseModel):
+    """Upon receiving a message with this object, Telegram clients will display a reply
+    interface to the user (act as if the user has selected the bot's message and tapped 'Reply').
+    This can be extremely useful if you want to create user-friendly step-by-step interfaces
+    without having to sacrifice privacy mode.
+
+    See here: https://core.telegram.org/bots/api#forcereply
+    """
+    force_reply: bool
+    input_field_placeholder: bool = None
+    selective: bool = None
+
+
 class InlineKeyboardButton(GeneralBaseModel):
     """This model represents one button of an inline keyboard.
 
@@ -174,7 +199,7 @@ class Message(GeneralBaseModel):
     poll: Dict[str, Any] = None
     venue: Dict[str, Any] = None
     location: Dict[str, Any] = None
-    new_chat_members: List[Dict[str, Any]] = None
+    new_chat_members: List[User] = None
     left_chat_member: User = None
     new_chat_title: str = None
     new_chat_photo: List[Dict[str, Any]] = None
@@ -206,6 +231,22 @@ class Message(GeneralBaseModel):
     video_chat_participants_invited: Dict[str, Any] = None
     web_app_data: Dict[str, Any] = None
     reply_markup: InlineKeyboardMarkup = None
+
+
+class MessageEntity(GeneralBaseModel):
+    """This model represents one special entity in a text message.
+    For example, hashtags, usernames, URLs, etc.
+
+    See here: https://core.telegram.org/bots/api#messageentity
+    """
+
+    type: str
+    offset: int
+    length: int
+    url: str = None
+    user: User = None
+    language: str = None
+    custom_emoji_id: str = None
 
 
 class TgHTTPStatusError(httpx._exceptions.HTTPStatusError):

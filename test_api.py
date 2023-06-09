@@ -47,8 +47,15 @@ async def main():
         res_1 = await bot.send_message(chat_id, 'Сообщение_1', reply_markup=keyboard)
         await asyncio.sleep(2)
         res_2 = await bot.send_message(chat_id, 'Сообщение_2', reply_markup=reply_keyboard)
+        await asyncio.sleep(2)
+        res_3 = await bot.send_photo(
+            chat_id,
+            'https://phonoteka.org/uploads/posts/2023-03/1679556522_phonoteka-org-p-opushka-lesa-foni-instagram-17.jpg',
+            reply_markup=keyboard
+        )
         pprint(res_1.dict())
         pprint(res_2.dict())
+        pprint(res_3.dict())
 
 
 if __name__ == '__main__':
