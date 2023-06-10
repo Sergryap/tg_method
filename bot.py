@@ -32,22 +32,11 @@ class Bot:
             On success, the sent message is returned as a Message instance
         """
 
+        params = {key: value for key, value in locals().items() if value is not None}
+        del params['self']
+        if params.get('reply_markup'):
+            params['reply_markup'] = params['reply_markup'].json()
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
-        params = {
-            'chat_id': chat_id,
-            'text': text,
-            'parse_mode': parse_mode,
-            'entities': entities,
-            'disable_web_page_preview': disable_web_page_preview,
-            'disable_notification': disable_notification,
-            'protect_content': protect_content,
-            'message_thread_id': message_thread_id,
-            'allow_sending_without_reply': allow_sending_without_reply,
-            'reply_markup': None if not reply_markup else reply_markup.json()
-        }
-        for param, value in params.copy().items():
-            if value is None:
-                del params[param]
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
@@ -77,19 +66,9 @@ class Bot:
             True on success
         """
 
+        params = {key: value for key, value in locals().items() if value is not None}
+        del params['self']
         request_url = f"https://api.telegram.org/bot{self.token}/setWebhook"
-        params = {
-            'url': url,
-            'certificate': certificate,
-            'ip_address': ip_address,
-            'max_connections': max_connections,
-            'allowed_updates': allowed_updates,
-            'drop_pending_updates': drop_pending_updates,
-            'secret_token': secret_token
-        }
-        for param, value in params.copy().items():
-            if value is None:
-                del params[param]
         response = await self.session.post(request_url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         return response.json()
@@ -138,24 +117,11 @@ class Bot:
             On success, the sent message is returned as a Message instance
         """
 
+        params = {key: value for key, value in locals().items() if value is not None}
+        del params['self']
+        if params.get('reply_markup'):
+            params['reply_markup'] = params['reply_markup'].json()
         url = f"https://api.telegram.org/bot{self.token}/sendPhoto"
-        params = {
-            'chat_id': chat_id,
-            'message_thread_id': message_thread_id,
-            'photo': photo,
-            'caption': caption,
-            'parse_mode': parse_mode,
-            'caption_entities': caption_entities,
-            'has_spoiler': has_spoiler,
-            'disable_notification': disable_notification,
-            'protect_content': protect_content,
-            'reply_to_message_id': reply_to_message_id,
-            'allow_sending_without_reply': allow_sending_without_reply,
-            'reply_markup': None if not reply_markup else reply_markup.json()
-        }
-        for param, value in params.copy().items():
-            if value is None:
-                del params[param]
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
@@ -189,25 +155,11 @@ class Bot:
             On success, the sent message is returned as a Message instance
         """
 
+        params = {key: value for key, value in locals().items() if value is not None}
+        del params['self']
+        if params.get('reply_markup'):
+            params['reply_markup'] = params['reply_markup'].json()
         url = f"https://api.telegram.org/bot{self.token}/sendDocument"
-        params = {
-            'chat_id': chat_id,
-            'message_thread_id': message_thread_id,
-            'document': document,
-            'thumbnail': thumbnail,
-            'caption': caption,
-            'parse_mode': parse_mode,
-            'caption_entities': caption_entities,
-            'disable_content_type_detection': disable_content_type_detection,
-            'disable_notification': disable_notification,
-            'protect_content': protect_content,
-            'reply_to_message_id': reply_to_message_id,
-            'allow_sending_without_reply': allow_sending_without_reply,
-            'reply_markup': None if not reply_markup else reply_markup.json()
-        }
-        for param, value in params.copy().items():
-            if value is None:
-                del params[param]
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
@@ -233,17 +185,9 @@ class Bot:
             On success, True is returned
         """
 
+        params = {key: value for key, value in locals().items() if value is not None}
+        del params['self']
         request_url = f"https://api.telegram.org/bot{self.token}/answercallbackquery"
-        params = {
-            'callback_query_id': callback_query_id,
-            'text': text,
-            'show_alert': show_alert,
-            'url': url,
-            'cache_time': cache_time
-        }
-        for param, value in params.copy().items():
-            if value is None:
-                del params[param]
         response = await self.session.get(request_url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         return response.json()
@@ -264,16 +208,11 @@ class Bot:
             the edited Message is returned, otherwise True is returned.
         """
 
+        params = {key: value for key, value in locals().items() if value is not None}
+        del params['self']
+        if params.get('reply_markup'):
+            params['reply_markup'] = params['reply_markup'].json()
         url = f"https://api.telegram.org/bot{self.token}/editMessageReplyMarkup"
-        params = {
-            'chat_id': chat_id,
-            'message_id': message_id,
-            'inline_message_id': inline_message_id,
-            'reply_markup': reply_markup
-        }
-        for param, value in params.copy().items():
-            if value is None:
-                del params[param]
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
