@@ -32,10 +32,7 @@ class Bot:
             On success, the sent message is returned as a Message instance
         """
 
-        params = {key: value for key, value in locals().items() if value is not None}
-        del params['self']
-        if params.get('reply_markup'):
-            params['reply_markup'] = params['reply_markup'].json()
+        params = await self.__clean_params(locals())
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
@@ -66,8 +63,7 @@ class Bot:
             True on success
         """
 
-        params = {key: value for key, value in locals().items() if value is not None}
-        del params['self']
+        params = await self.__clean_params(locals())
         request_url = f"https://api.telegram.org/bot{self.token}/setWebhook"
         response = await self.session.post(request_url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
@@ -117,10 +113,7 @@ class Bot:
             On success, the sent message is returned as a Message instance
         """
 
-        params = {key: value for key, value in locals().items() if value is not None}
-        del params['self']
-        if params.get('reply_markup'):
-            params['reply_markup'] = params['reply_markup'].json()
+        params = await self.__clean_params(locals())
         url = f"https://api.telegram.org/bot{self.token}/sendPhoto"
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
@@ -155,10 +148,7 @@ class Bot:
             On success, the sent message is returned as a Message instance
         """
 
-        params = {key: value for key, value in locals().items() if value is not None}
-        del params['self']
-        if params.get('reply_markup'):
-            params['reply_markup'] = params['reply_markup'].json()
+        params = await self.__clean_params(locals())
         url = f"https://api.telegram.org/bot{self.token}/sendDocument"
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
@@ -185,8 +175,7 @@ class Bot:
             On success, True is returned
         """
 
-        params = {key: value for key, value in locals().items() if value is not None}
-        del params['self']
+        params = await self.__clean_params(locals())
         request_url = f"https://api.telegram.org/bot{self.token}/answercallbackquery"
         response = await self.session.get(request_url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
@@ -208,10 +197,7 @@ class Bot:
             the edited Message is returned, otherwise True is returned.
         """
 
-        params = {key: value for key, value in locals().items() if value is not None}
-        del params['self']
-        if params.get('reply_markup'):
-            params['reply_markup'] = params['reply_markup'].json()
+        params = await self.__clean_params(locals())
         url = f"https://api.telegram.org/bot{self.token}/editMessageReplyMarkup"
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
@@ -258,3 +244,11 @@ class Bot:
         error_type = error_types.get(status_class, "Invalid status code")
         message = message.format(response, error_type=error_type)
         raise tg_obj.TgHTTPStatusError(message, request=request, response=response)
+
+    @staticmethod
+    async def __clean_params(initial_params):
+        params = {key: value for key, value in initial_params.items() if value is not None}
+        del params['self']
+        if params.get('reply_markup'):
+            params['reply_markup'] = params['reply_markup'].json()
+        return params
