@@ -211,6 +211,11 @@ class Bot:
 
     @staticmethod
     async def __tg_raise_for_status(response: httpx._models.Response):
+        """Raise the `TgHTTPStatusError` if one occurred.
+
+        Args:
+            response: httpx._models.Response instance
+        """
 
         request = response._request
         if request is None:
@@ -247,6 +252,14 @@ class Bot:
 
     @staticmethod
     async def __clean_params(initial_params):
+        """Getting clean parameters for a request.
+
+        Args:
+            initial_params (dict): initial parameters from functions arguments
+        Returns:
+            Clean parameters for request as dict
+        """
+
         params = {key: value for key, value in initial_params.items() if value is not None}
         del params['self']
         if params.get('reply_markup'):
