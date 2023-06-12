@@ -37,8 +37,6 @@ class Bot:
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
-        if res.get('from'):
-            res['from_'] = res.pop('from')
         return tg_obj.Message.parse_obj(res)
 
     async def set_webhook(
@@ -118,8 +116,6 @@ class Bot:
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
-        if res.get('from'):
-            res['from_'] = res.pop('from')
         return tg_obj.Message.parse_obj(res)
 
     async def send_document(
@@ -153,8 +149,6 @@ class Bot:
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
-        if res.get('from'):
-            res['from_'] = res.pop('from')
         return tg_obj.Message.parse_obj(res)
 
     async def answer_callback_query(
@@ -202,8 +196,6 @@ class Bot:
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
-        if res.get('from'):
-            res['from_'] = res.pop('from')
         return tg_obj.MessageReplyMarkup.parse_obj(res)
 
     async def send_location(self):

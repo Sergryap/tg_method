@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import httpx
 
-from pydantic import BaseModel as GeneralBaseModel, root_validator, AnyHttpUrl
+from pydantic import BaseModel as GeneralBaseModel, root_validator, AnyHttpUrl, Field
 from typing import Any, Union
 
 
@@ -217,7 +217,7 @@ class Message(BaseModel):
 
     message_id: int
     message_thread_id: int = None
-    from_: User = None
+    from_: User = Field(default=None, alias='from')
     sender_chat: Chat = None
     date: int
     chat: Chat
