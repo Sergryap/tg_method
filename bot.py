@@ -5,10 +5,9 @@ import tg_obj
 class Bot:
     """The class of tg bot methods"""
 
-    def __init__(self, tg_token: str, session: httpx.AsyncClient, loop=None):
-        self.token = tg_token
+    def __init__(self, tg_token: str, session: httpx.AsyncClient):
+        self.url_start = f'https://api.telegram.org/bot{tg_token}/'
         self.session = session
-        self.loop = loop
 
     async def send_message(
             self,
@@ -33,7 +32,7 @@ class Bot:
         """
 
         params = await self.__clean_params(locals())
-        url = f"https://api.telegram.org/bot{self.token}/sendMessage"
+        url = self.url_start + 'sendMessage'
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
@@ -62,7 +61,7 @@ class Bot:
         """
 
         params = await self.__clean_params(locals())
-        request_url = f"https://api.telegram.org/bot{self.token}/setWebhook"
+        request_url = self.url_start + 'setWebhook'
         response = await self.session.post(request_url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         return response.json()
@@ -80,7 +79,7 @@ class Bot:
             True on success.
         """
 
-        request_url = f"https://api.telegram.org/bot{self.token}/deleteWebhook"
+        request_url = self.url_start + 'deleteWebhook'
         params = None
         if drop_pending_updates:
             params = {'drop_pending_updates': drop_pending_updates}
@@ -112,7 +111,7 @@ class Bot:
         """
 
         params = await self.__clean_params(locals())
-        url = f"https://api.telegram.org/bot{self.token}/sendPhoto"
+        url = self.url_start + 'sendPhoto'
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
@@ -145,7 +144,7 @@ class Bot:
         """
 
         params = await self.__clean_params(locals())
-        url = f"https://api.telegram.org/bot{self.token}/sendDocument"
+        url = self.url_start + 'sendDocument'
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
@@ -170,7 +169,7 @@ class Bot:
         """
 
         params = await self.__clean_params(locals())
-        request_url = f"https://api.telegram.org/bot{self.token}/answercallbackquery"
+        request_url = self.url_start + 'answerCallbackQuery'
         response = await self.session.get(request_url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         return response.json()
@@ -192,7 +191,7 @@ class Bot:
         """
 
         params = await self.__clean_params(locals())
-        url = f"https://api.telegram.org/bot{self.token}/editMessageReplyMarkup"
+        url = self.url_start + 'editMessageReplyMarkup'
         response = await self.session.get(url, params=params, follow_redirects=True)
         await self.__tg_raise_for_status(response)
         res = response.json().get('result')
